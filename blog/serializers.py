@@ -6,7 +6,7 @@ from .models import Post, Comment
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ["id", "author", "body", "is_approved", "created_at"]
+        fields = ["id","post", "author", "body", "is_approved", "created_at"]
         read_only_fields = ["id", "created_at", "author"]
 
 

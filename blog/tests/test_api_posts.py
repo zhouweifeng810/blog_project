@@ -43,3 +43,23 @@ def test_non_author_cannot_edit(api_client):
     api_client.force_authenticate(user=other)
     res = api_client.patch(f"/api/posts/{pid}/", {"body": "hack"}, format="json")
     assert res.status_code in (403, 404)
+
+
+@pytest.mark.django_db
+def test_list_posts_with_pagination(api_client):
+    PostFactory.create_batch(12)
+    res = api_client.get("/api/posts/?page=2&page_size=5")
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert "count" in data and "results" in data
+    assert data["count"] == 12
+    assert len(data["results"]) == 5
+
+@pytest.mark.django_db
+def test_search_and_ordering(api_client):
+    PostFactory(title="Learn Python", body="x")
+    PostFactory(title="Django Tips", body="python inside")
+    res = api_client.get("/api/posts/?search=python&ordering=-created_at")
+    assert res.status_code == 200
+    titles = [p["title"] for p in res.json()["results"]]
+    assert set(titles) == {"Learn Python", "Django Tips"}
