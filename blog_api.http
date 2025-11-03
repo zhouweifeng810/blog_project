@@ -1,0 +1,43 @@
+@base_url = http://127.0.0.1:8000
+@username = admin
+@password = 123456
+@post_id = 1
+
+### List Posts (paginated)
+GET {{base_url}}/api/posts/?page=1&page_size=5
+
+### Search + Ordering
+GET {{base_url}}/api/posts/?search=python&ordering=-created_at
+
+### Retrieve Post
+GET {{base_url}}/api/posts/{{post_id}}/
+
+### Create Post (Basic Auth via URL)
+POST http://{{username}}:{{password}}@127.0.0.1:8000/api/posts/
+Content-Type: application/json
+
+{
+  "title": "API Ready",
+  "body": "created from VS Code REST Client"
+}
+
+### Update Post (PATCH)
+PATCH http://{{username}}:{{password}}@127.0.0.1:8000/api/posts/{{post_id}}/
+Content-Type: application/json
+
+{
+  "body": "updated via PATCH"
+}
+
+### Replace Post (PUT)
+PUT http://{{username}}:{{password}}@127.0.0.1:8000/api/posts/{{post_id}}/
+Content-Type: application/json
+
+{
+  "title": "Replaced",
+  "body": "replace body",
+  "status": "DRAFT"
+}
+
+### Delete Post
+DELETE http://{{username}}:{{password}}@127.0.0.1:8000/api/posts/{{post_id}}/
